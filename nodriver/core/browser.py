@@ -63,6 +63,7 @@ class Browser:
     config: Config
     connection: Connection
 
+    
     @classmethod
     async def create(
             cls,
@@ -154,6 +155,10 @@ class Browser:
         return True
         # return (self._process and self._process.returncode) or False
 
+    def __deepcopy__(self, memo):
+        memo[id(self)] = self
+        return self
+    
     async def wait(self, time: Union[float, int] = 0.1):
         """wait for <time> seconds. important to use, especially in between page navigation
 

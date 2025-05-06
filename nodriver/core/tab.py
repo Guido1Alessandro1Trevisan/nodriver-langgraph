@@ -180,6 +180,17 @@ class Tab(Connection):
         """
         return f"http://{self.browser.config.host}:{self.browser.config.port}/devtools/inspector.html?ws={self.websocket_url[5:]}"
 
+    def __getattr__(self, item):
+        if item.startswith("__"):
+            raise AttributeError(item)
+        target = object.__getattribute__(self, "_target")
+        return getattr(target, item)
+
+    # (b) skip real copying for the same reason as Browser
+    def __deepcopy__(self, memo):
+        memo[id(self)] = self
+        return self
+    
     def inspector_open(self):
         import webbrowser
 
